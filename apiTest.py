@@ -1,12 +1,14 @@
-import Riot, sys, requests
+import Riot, sys, requests, time
 
 if len(sys.argv) == 1:
 	print('Missing summoner name. Correct usage is: python apiTest.py [SummonerName]')
+	exit()
 
 summoner_name = sys.argv[1];
 summoner = Riot.getSummonerByName(summoner_name)
-summonerId = summoner[u'accountId']
+summonerId = summoner.json()[u'accountId']
 
-recent_matches = Riot.getRecentMatches(summonerId)
-
-print Riot.getChampion(recent_matches[u'matches'][0][u'champion'])[u'name']
+recent_matches = Riot.getRecentMatches(summonerId).json()
+for match in recent_matches['matches']:
+	print Riot.getChampion(match['champion']).headers
+	time.sleep(1);
