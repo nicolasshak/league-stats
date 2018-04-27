@@ -1,3 +1,7 @@
 {
-	
+	"400": "Normal Draft Pick",
+	"420": "Ranked Solo",
+	"430": "Normal Blind Pick",
+	"440": "Ranked Flex",
+	"1020": "One for All"
 }
