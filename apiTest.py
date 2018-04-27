@@ -1,14 +1,35 @@
-import Riot, sys, requests, time
+import sys, requests, time, json
+from riotwatcher import RiotWatcher
+from terminaltables import AsciiTable
+
+KEY_PATH = 'json/key.txt'
+CHAMPIONS_PATH = 'json/champions.json'
+REGION = 'na1'
+
+def getKey():
+	with open(KEY_PATH) as file_object:
+		key = file_object.readline()
+	return key
+
+def getChampions():
+	return json.load(open(CHAMPIONS_PATH))
 
 if len(sys.argv) == 1:
 	print('Missing summoner name. Correct usage is: python apiTest.py [SummonerName]')
 	exit()
 
-summoner_name = sys.argv[1];
-summoner = Riot.getSummonerByName(summoner_name)
-summonerId = summoner.json()[u'accountId']
+Riot = RiotWatcher(getKey())
+champions = getChampions()
 
-recent_matches = Riot.getRecentMatches(summonerId).json()
-for match in recent_matches['matches']:
-	print Riot.getChampion(match['champion']).headers
-	time.sleep(1);
+summoner = Riot.summoner.by_name(REGION, sys.argv[1])
+print summoner['name']
+
+matches = Riot.match.matchlist_by_account_recent(REGION, summoner['accountId'])
+
+data = [['Lane', 'Champion', 'Queue']]
+
+for match in matches['matches']:
+	data.append([match['lane'], champions[str(match['champion'])], str(match['queue'])])
+
+table = AsciiTable(data)
+print table.table
