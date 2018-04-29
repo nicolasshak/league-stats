@@ -36,7 +36,7 @@ champions = json.load(open(CHAMPIONS_PATH))
 queues = json.load(open(QUEUES_PATH))
 
 summoner = Riot.summoner.by_name(REGION, sys.argv[1])
-print summoner['name']
+print(summoner['name'])
 
 if args.getAllMatches:
 	matches = Riot.match.matchlist_by_account(REGION, summoner['accountId'])
@@ -74,7 +74,7 @@ for match in matches['matches']:
 			])
 
 table = AsciiTable(games)
-print table.table
+print(table.table)
 winrate.append([str(wins), str(losses), float(wins)/float(wins + losses)])
 table2 = AsciiTable(winrate)
-print table2.table
+print(table2.table)
