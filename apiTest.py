@@ -12,6 +12,13 @@ def getKey():
 		key = file_object.readline()
 	return key
 
+def isValidMatch(args, match):
+	if args.byChampion == None or champions[str(match['champion'])] == args.byChampion[0]:
+		if not args.rankedOnly or (args.rankedOnly and (match['queue'] == 420 or match['queue'] == 440)):
+			return True
+	return False
+
+
 if len(sys.argv) == 1:
 	print('Missing summoner name. Correct usage is: python apiTest.py [SummonerName]')
 	exit()
@@ -20,6 +27,7 @@ parser = argparse.ArgumentParser(description = 'calculate winrate')
 parser.add_argument('summonerName', help='summoner name for lookup', type = str)
 parser.add_argument('-A', dest = 'getAllMatches', help = 'get all available matches', action = 'store_true')
 parser.add_argument('-r', dest = 'rankedOnly', help = 'filter to ranked games only', action = 'store_true')
+parser.add_argument('-c', dest = 'byChampion', nargs = 1, help = 'filter by champion', action = 'store')
 
 args = parser.parse_args()
 
@@ -41,7 +49,7 @@ wins = 0;
 losses = 0;
 
 for match in matches['matches']:
-	if not args.rankedOnly or (args.rankedOnly and (match['queue'] == 420 or match['queue'] == 440)):
+	if isValidMatch(args, match):
 
 		matchDto = Riot.match.by_id(REGION, match['gameId'])
 		participantId = -1
