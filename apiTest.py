@@ -28,6 +28,7 @@ parser.add_argument('summonerName', help='summoner name for lookup', type = str)
 parser.add_argument('-A', dest = 'getAllMatches', help = 'get all available matches', action = 'store_true')
 parser.add_argument('-r', dest = 'rankedOnly', help = 'filter to ranked games only', action = 'store_true')
 parser.add_argument('-c', dest = 'byChampion', nargs = 1, help = 'filter by champion', action = 'store')
+parser.add_argument('-q', dest = 'byQueue', help = 'filter by queue', action = 'store_true')
 
 args = parser.parse_args()
 
@@ -75,6 +76,12 @@ for match in matches['matches']:
 
 table = AsciiTable(games)
 print(table.table)
-winrate.append([str(wins), str(losses), float(wins)/float(wins + losses)])
+
+if wins + losses == 0:
+	percentage = 'UNDEF'
+else:
+	percentage = float(wins + losses)
+
+winrate.append([str(wins), str(losses), percentage])
 table2 = AsciiTable(winrate)
 print(table2.table)
